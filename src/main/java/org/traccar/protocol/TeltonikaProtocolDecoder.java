@@ -204,8 +204,8 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(9, fmbXXX, (p, b) -> p.set(Position.PREFIX_ADC + 1, b.readUnsignedShort() * 0.001));
         register(10, fmbXXX, (p, b) -> p.set(Position.PREFIX_ADC + 2, b.readUnsignedShort() * 0.001));
         register(11, fmbXXX, (p, b) -> p.set(Position.KEY_ICCID, String.valueOf(b.readLong())));
-        register(12, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.001));
-        register(13, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort() * 0.01));
+        //register(12, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.001)); //дубль
+        //register(13, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort() * 0.01)); //дубль
         register(16, any, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
         register(17, any, (p, b) -> p.set("axisX", b.readShort()));
         register(18, any, (p, b) -> p.set("axisY", b.readShort()));
@@ -239,13 +239,13 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         //register(80, fmbXXX, (p, b) -> p.set("dataMode", b.readUnsignedByte())); //фігня
         //register(81, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_SPEED, b.readUnsignedByte())); //фігня
         //register(82, fmbXXX, (p, b) -> p.set(Position.KEY_THROTTLE, b.readUnsignedByte())); //фігня
-        register(83, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1));
+        register(86, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt())); //стара id - 83
         //register(84, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL, b.readUnsignedShort() * 0.1));
         register(85, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
         //register(87, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_ODOMETER, b.readUnsignedInt())); //фігня
-        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedByte())); //стара айдішка - 89
-        register(107, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1));
-        //register(110, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort() * 0.1)); //фігня
+        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedByte())); //стара id - 89
+        //register(107, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1)); //дубль
+        register(135, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort())); //стара id 110
         //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_BATTERY_LEVEL, b.readUnsignedByte())); //фігня
         register(115, fmbXXX, (p, b) -> p.set(Position.KEY_ENGINE_TEMP, b.readShort() * 0.1));
         register(701, fmb6XX, (p, b) -> p.set("bleTemp1", b.readShort() * 0.01));
@@ -340,7 +340,11 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             if (decoded) {
                 buf.readerIndex(index + length);
             } else {
-                position.set(Position.PREFIX_IO + id, readValue(buf, length));
+				if (id != 138) { //ігноруєм лишні іо
+                    position.set(Position.PREFIX_IO + id, readValue(buf, length));
+                } else {
+                    buf.skipBytes(length);
+                }
             }
         }
     }
