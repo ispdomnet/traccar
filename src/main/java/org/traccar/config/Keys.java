@@ -1585,7 +1585,8 @@ public final class Keys {
             List.of(KeyType.CONFIG));
 
     /**
-     * Distance in meters. Distances above this value gets handled like explained in 'coordinates.filter'.
+     * Distance in meters. Distances above this value gets handled like explained in 'coordinates.filter', but only if
+     * Position is also marked as 'invalid'.
      */
     public static final ConfigKey<Integer> COORDINATES_MAX_ERROR = new IntegerConfigKey(
             "coordinates.maxError",

@@ -211,7 +211,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(18, any, (p, b) -> p.set("axisY", b.readShort()));
         register(19, any, (p, b) -> p.set("axisZ", b.readShort()));
         register(21, any, (p, b) -> p.set(Position.KEY_RSSI, b.readUnsignedByte()));
-        register(24, fmbXXX, (p, b) -> p.setSpeed(UnitsConverter.knotsFromKph(b.readUnsignedShort())));
+        register(24, fmbXXX, (p, b) -> p.setSpeed(UnitsConverter.knotsFromKph(b.readUnsignedShort()))); // ???
         register(25, any, (p, b) -> p.set("bleTemp1", b.readShort() * 0.01));
         register(26, any, (p, b) -> p.set("bleTemp2", b.readShort() * 0.01));
         register(27, any, (p, b) -> p.set("bleTemp3", b.readShort() * 0.01));
@@ -221,7 +221,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(32, fmbXXX, (p, b) -> p.set(Position.KEY_COOLANT_TEMP, b.readByte()));
         register(36, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
         register(43, fmbXXX, (p, b) -> p.set("milDistance", b.readUnsignedShort()));
-        register(57, fmbXXX, (p, b) -> p.set("hybridBatteryLevel", b.readByte()));
+        //register(57, fmbXXX, (p, b) -> p.set("hybridBatteryLevel", b.readByte()));
         register(66, any, (p, b) -> p.set(Position.KEY_POWER, b.readUnsignedShort() * 0.001));
         register(67, any, (p, b) -> p.set(Position.KEY_BATTERY, b.readUnsignedShort() * 0.001));
         register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort() * 0.001));
@@ -235,17 +235,17 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                 p.set(Position.KEY_DRIVER_UNIQUE_ID, String.format("%016X", driverUniqueId));
             }
         });
-        register(80, fmbXXX, (p, b) -> p.set("dataMode", b.readUnsignedByte()));
-        register(81, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_SPEED, b.readUnsignedByte()));
-        register(82, fmbXXX, (p, b) -> p.set(Position.KEY_THROTTLE, b.readUnsignedByte()));
+        //register(80, fmbXXX, (p, b) -> p.set("dataMode", b.readUnsignedByte()));
+        //register(81, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_SPEED, b.readUnsignedByte()));
+        //register(82, fmbXXX, (p, b) -> p.set(Position.KEY_THROTTLE, b.readUnsignedByte()));
         register(83, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1));
-        register(84, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL, b.readUnsignedShort() * 0.1));
+        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL, b.readUnsignedShort() * 0.1)); //84
         register(85, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
-        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_ODOMETER, b.readUnsignedInt()));
+        //register(87, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_ODOMETER, b.readUnsignedInt()));
         register(89, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedByte()));
         register(107, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1));
-        register(110, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort() * 0.1));
-        register(113, fmbXXX, (p, b) -> p.set(Position.KEY_BATTERY_LEVEL, b.readUnsignedByte()));
+        //register(110, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort() * 0.1));
+        //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_BATTERY_LEVEL, b.readUnsignedByte()));
         register(115, fmbXXX, (p, b) -> p.set(Position.KEY_ENGINE_TEMP, b.readShort() * 0.1));
         register(701, fmb6XX, (p, b) -> p.set("bleTemp1", b.readShort() * 0.01));
         register(702, fmb6XX, (p, b) -> p.set("bleTemp2", b.readShort() * 0.01));
@@ -257,12 +257,12 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(182, any, (p, b) -> p.set(Position.KEY_HDOP, b.readUnsignedShort() * 0.1));
         register(199, any, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
         register(200, fmbXXX, (p, b) -> p.set("sleepMode", b.readUnsignedByte()));
-        register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort()));
+        register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort())); //?
         register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
-        register(232, fmbXXX, (p, b) -> p.set("cngStatus", b.readUnsignedByte() > 0));
-        register(233, fmbXXX, (p, b) -> p.set("cngUsed", b.readUnsignedInt() * 0.1));
-        register(234, fmbXXX, (p, b) -> p.set("cngLevel", b.readUnsignedShort()));
-        register(235, fmbXXX, (p, b) -> p.set("oilLevel", b.readUnsignedByte()));
+        //register(232, fmbXXX, (p, b) -> p.set("cngStatus", b.readUnsignedByte() > 0));
+        //register(233, fmbXXX, (p, b) -> p.set("cngUsed", b.readUnsignedInt() * 0.1));
+        //register(234, fmbXXX, (p, b) -> p.set("cngLevel", b.readUnsignedShort()));
+        //register(235, fmbXXX, (p, b) -> p.set("oilLevel", b.readUnsignedByte()));
         register(236, any, (p, b) -> p.addAlarm(b.readUnsignedByte() > 0 ? Position.ALARM_GENERAL : null));
         register(239, any, (p, b) -> p.set(Position.KEY_IGNITION, b.readUnsignedByte() > 0));
         register(240, any, (p, b) -> p.set(Position.KEY_MOTION, b.readUnsignedByte() > 0));
@@ -616,7 +616,21 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                         }
                     }
                 } else {
-                    position.set(Position.PREFIX_IO + id, ByteBufUtil.hexDump(buf.readSlice(length)));
+                    String hex = ByteBufUtil.hexDump(buf.readSlice(length));
+
+                    if (id == 10518 || id == 10519 || id == 10520 || id == 10521) {
+                        try {
+                            byte[] bytes = javax.xml.bind.DatatypeConverter.parseHexBinary(hex);
+                            String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
+                            //position.set(Position.PREFIX_IO + id, hex);
+                            position.set(Position.PREFIX_IO + id, decoded);
+                            //position.set(Position.PREFIX_IO + id + "_text", decoded);
+                        } catch (Exception e) {
+                            position.set(Position.PREFIX_IO + id, hex);
+                        }
+                    } else {
+                        position.set(Position.PREFIX_IO + id, hex);
+                    }
                 }
             }
         }
@@ -629,6 +643,8 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             if (driverMsb != null && driverLsb != null) {
                 String driver = new String(ByteBuffer.allocate(16).putLong(driverMsb).putLong(driverLsb).array());
                 position.set(Position.KEY_DRIVER_UNIQUE_ID, driver);
+                position.getAttributes().remove("io195");
+                position.getAttributes().remove("io196");
             }
         }
     }
