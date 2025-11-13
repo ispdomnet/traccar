@@ -220,7 +220,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(30, fmbXXX, (p, b) -> p.set("faultCount", b.readUnsignedByte()));
         register(31, fmbXXX, (p, b) -> p.set(Position.KEY_ENGINE_LOAD, b.readUnsignedByte()));
         register(32, fmbXXX, (p, b) -> p.set(Position.KEY_COOLANT_TEMP, b.readByte()));
-        register(36, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
+        //register(36, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort())); //дубль
         register(43, fmbXXX, (p, b) -> p.set("milDistance", b.readUnsignedShort()));
         //register(57, fmbXXX, (p, b) -> p.set("hybridBatteryLevel", b.readByte())); //фігня
         register(66, any, (p, b) -> p.set(Position.KEY_POWER, b.readUnsignedShort() * 0.001));
@@ -241,7 +241,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         //register(82, fmbXXX, (p, b) -> p.set(Position.KEY_THROTTLE, b.readUnsignedByte())); //фігня
         register(86, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt())); //стара id - 83
         //register(84, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL, b.readUnsignedShort() * 0.1));
-        register(85, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
+        register(88, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort())); //стара id - 85
         //register(87, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_ODOMETER, b.readUnsignedInt())); //фігня
         register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedByte())); //стара id - 89
         //register(107, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1)); //дубль
@@ -300,6 +300,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10834, fmbXXX, (p, b) -> p.set("eyeRoll3", b.readShort()));
         register(10835, fmbXXX, (p, b) -> p.set("eyeRoll4", b.readShort()));
 
+        register(113, fmbXXX, (p, b) -> p.set("serviceDistance", b.readInt()));
         register(139, fmbXXX, (p, b) -> p.set("grossCombVWeight", b.readUnsignedInt()));
     }
 
