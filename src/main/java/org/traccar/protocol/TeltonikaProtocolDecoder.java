@@ -211,7 +211,8 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(18, any, (p, b) -> p.set("axisY", b.readShort()));
         register(19, any, (p, b) -> p.set("axisZ", b.readShort()));
         register(21, any, (p, b) -> p.set(Position.KEY_RSSI, b.readUnsignedByte()));
-        register(24, fmbXXX, (p, b) -> p.setSpeed(UnitsConverter.knotsFromKph(b.readUnsignedShort()))); // ???
+        //перевод в вузли для чогось UnitsConverter.knotsFromKph
+        register(24, fmbXXX, (p, b) -> p.setSpeed(UnitsConverter.knotsFromKph(b.readUnsignedShort())));
         register(25, any, (p, b) -> p.set("bleTemp1", b.readShort() * 0.01));
         register(26, any, (p, b) -> p.set("bleTemp2", b.readShort() * 0.01));
         register(27, any, (p, b) -> p.set("bleTemp3", b.readShort() * 0.01));
@@ -221,7 +222,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(32, fmbXXX, (p, b) -> p.set(Position.KEY_COOLANT_TEMP, b.readByte()));
         register(36, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
         register(43, fmbXXX, (p, b) -> p.set("milDistance", b.readUnsignedShort()));
-        //register(57, fmbXXX, (p, b) -> p.set("hybridBatteryLevel", b.readByte()));
+        //register(57, fmbXXX, (p, b) -> p.set("hybridBatteryLevel", b.readByte())); //фігня
         register(66, any, (p, b) -> p.set(Position.KEY_POWER, b.readUnsignedShort() * 0.001));
         register(67, any, (p, b) -> p.set(Position.KEY_BATTERY, b.readUnsignedShort() * 0.001));
         register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort() * 0.001));
@@ -235,17 +236,17 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                 p.set(Position.KEY_DRIVER_UNIQUE_ID, String.format("%016X", driverUniqueId));
             }
         });
-        //register(80, fmbXXX, (p, b) -> p.set("dataMode", b.readUnsignedByte()));
-        //register(81, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_SPEED, b.readUnsignedByte()));
-        //register(82, fmbXXX, (p, b) -> p.set(Position.KEY_THROTTLE, b.readUnsignedByte()));
+        //register(80, fmbXXX, (p, b) -> p.set("dataMode", b.readUnsignedByte())); //фігня
+        //register(81, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_SPEED, b.readUnsignedByte())); //фігня
+        //register(82, fmbXXX, (p, b) -> p.set(Position.KEY_THROTTLE, b.readUnsignedByte())); //фігня
         register(83, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1));
-        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL, b.readUnsignedShort() * 0.1)); //84
+        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL, b.readUnsignedShort() * 0.1)); //стара айдішка - 84
         register(85, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
-        //register(87, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_ODOMETER, b.readUnsignedInt()));
+        //register(87, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_ODOMETER, b.readUnsignedInt())); //фігня
         register(89, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedByte()));
         register(107, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1));
-        //register(110, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort() * 0.1));
-        //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_BATTERY_LEVEL, b.readUnsignedByte()));
+        //register(110, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort() * 0.1)); //фігня
+        //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_BATTERY_LEVEL, b.readUnsignedByte())); //фігня
         register(115, fmbXXX, (p, b) -> p.set(Position.KEY_ENGINE_TEMP, b.readShort() * 0.1));
         register(701, fmb6XX, (p, b) -> p.set("bleTemp1", b.readShort() * 0.01));
         register(702, fmb6XX, (p, b) -> p.set("bleTemp2", b.readShort() * 0.01));
@@ -257,12 +258,12 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(182, any, (p, b) -> p.set(Position.KEY_HDOP, b.readUnsignedShort() * 0.1));
         register(199, any, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
         register(200, fmbXXX, (p, b) -> p.set("sleepMode", b.readUnsignedByte()));
-        register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort())); //?
+        register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort())); //невідоме
         register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
-        //register(232, fmbXXX, (p, b) -> p.set("cngStatus", b.readUnsignedByte() > 0));
-        //register(233, fmbXXX, (p, b) -> p.set("cngUsed", b.readUnsignedInt() * 0.1));
-        //register(234, fmbXXX, (p, b) -> p.set("cngLevel", b.readUnsignedShort()));
-        //register(235, fmbXXX, (p, b) -> p.set("oilLevel", b.readUnsignedByte()));
+        //register(232, fmbXXX, (p, b) -> p.set("cngStatus", b.readUnsignedByte() > 0)); //фігня
+        //register(233, fmbXXX, (p, b) -> p.set("cngUsed", b.readUnsignedInt() * 0.1)); //фігня
+        //register(234, fmbXXX, (p, b) -> p.set("cngLevel", b.readUnsignedShort())); //фігня
+        //register(235, fmbXXX, (p, b) -> p.set("oilLevel", b.readUnsignedByte())); //фігня
         register(236, any, (p, b) -> p.addAlarm(b.readUnsignedByte() > 0 ? Position.ALARM_GENERAL : null));
         register(239, any, (p, b) -> p.set(Position.KEY_IGNITION, b.readUnsignedByte() > 0));
         register(240, any, (p, b) -> p.set(Position.KEY_MOTION, b.readUnsignedByte() > 0));
@@ -543,7 +544,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             for (int j = 0; j < cnt; j++) {
                 int id = buf.readUnsignedShort();
                 int length = buf.readUnsignedShort();
-                if (id == 256 || id == 325) {
+                if ((id == 256 || id == 325) && false) { //це не VIN код
                     position.set(Position.KEY_VIN,
                             buf.readSlice(length).toString(StandardCharsets.US_ASCII));
                 } else if (id == 281) {
@@ -618,7 +619,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                 } else {
                     String hex = ByteBufUtil.hexDump(buf.readSlice(length));
 
-                    if (id == 10518 || id == 10519 || id == 10520 || id == 10521) {
+                    if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я, прізвище водія 1, 2
                         try {
                             byte[] bytes = javax.xml.bind.DatatypeConverter.parseHexBinary(hex);
                             String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
@@ -638,7 +639,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         decodeNetwork(position, model);
 
         if (model != null && model.matches("FM.6..")) {
-            Long driverMsb = (Long) position.getAttributes().get("io195");
+            Long driverMsb = (Long) position.getAttributes().get("io195"); //карта водія
             Long driverLsb = (Long) position.getAttributes().get("io196");
             if (driverMsb != null && driverLsb != null) {
                 String driver = new String(ByteBuffer.allocate(16).putLong(driverMsb).putLong(driverLsb).array());
@@ -646,13 +647,21 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                 position.getAttributes().remove("io195");
                 position.getAttributes().remove("io196");
             }
-			Long vehicleRnp2 = (Long) position.getAttributes().get("io232");
-            Long vehicleRnp1 = (Long) position.getAttributes().get("io231");
-            if (vehicleRnp2 != null && vehicleRnp1 != null) {
-                String vehicleRnp = new String(ByteBuffer.allocate(16).putLong(vehicleRnp2).putLong(vehicleRnp1).array());
+            Long vehRnp1 = (Long) position.getAttributes().get("io231"); //номера машини
+            Long vehRnp2 = (Long) position.getAttributes().get("io232");
+            if (vehRnp2 != null && vehRnp1 != null) {
+                String vehicleRnp = new String(ByteBuffer.allocate(16).putLong(vehRnp1).putLong(vehRnp2).array());
                 position.set("vehicleRnp", vehicleRnp);
-                position.getAttributes().remove("io232");
                 position.getAttributes().remove("io231");
+                position.getAttributes().remove("io232");
+            }
+            Long vin1 = (Long) position.getAttributes().get("io233"); //vin код
+            Long vin2 = (Long) position.getAttributes().get("io234");
+            if (vin2 != null && vin1 != null) {
+                String vehicleIN = new String(ByteBuffer.allocate(16).putLong(vin1).putLong(vin2).array());
+                position.set(Position.KEY_VIN, vehicleIN);
+                position.getAttributes().remove("io233");
+                position.getAttributes().remove("io234");
             }
         }
     }
