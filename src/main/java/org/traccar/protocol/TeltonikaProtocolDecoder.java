@@ -646,6 +646,14 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                 position.getAttributes().remove("io195");
                 position.getAttributes().remove("io196");
             }
+			Long vehicleRnp2 = (Long) position.getAttributes().get("io232");
+            Long vehicleRnp1 = (Long) position.getAttributes().get("io231");
+            if (vehicleRnp2 != null && vehicleRnp1 != null) {
+                String vehicleRnp = new String(ByteBuffer.allocate(16).putLong(vehicleRnp2).putLong(vehicleRnp1).array());
+                position.set("vehicleRnp", vehicleRnp);
+                position.getAttributes().remove("io232");
+                position.getAttributes().remove("io231");
+            }
         }
     }
 
