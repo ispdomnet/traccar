@@ -340,7 +340,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             if (decoded) {
                 buf.readerIndex(index + length);
             } else {
-				if (id != 138) { //ігноруєм лишні іо
+                if (id != 138) { //ігноруєм лишні іо
                     position.set(Position.PREFIX_IO + id, readValue(buf, length));
                 } else {
                     buf.skipBytes(length);
