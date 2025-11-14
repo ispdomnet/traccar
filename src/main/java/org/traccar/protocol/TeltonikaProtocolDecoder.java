@@ -301,7 +301,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10835, fmbXXX, (p, b) -> p.set("eyeRoll4", b.readShort()));
 
         register(104, fmbXXX, (p, b) -> p.set(Position.KEY_HOURS, b.readUnsignedInt() * 3600000)); //?
-        register(113, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_SERVICE, b.readInt() * 1000));
+        register(113, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_SERVICE, b.readInt()));
         register(139, fmbXXX, (p, b) -> p.set("grossCombVWeight", b.readUnsignedInt()));
     }
 
