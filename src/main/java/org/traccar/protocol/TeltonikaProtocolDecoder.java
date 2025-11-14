@@ -243,7 +243,8 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         //register(84, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL, b.readUnsignedShort() * 0.1));
         register(88, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort())); //стара id - 85
         //register(87, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_ODOMETER, b.readUnsignedInt())); //фігня
-        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedByte())); //стара id - 89
+        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedInt())); //стара id - 89
+        //register(87, fmbXXX, (p, b) -> p.set("test_fuel_level", b.readUnsignedByte())); //тест
         //register(107, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1)); //дубль
         register(135, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort())); //стара id 110
         //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_BATTERY_LEVEL, b.readUnsignedByte())); //фігня
@@ -300,8 +301,10 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10834, fmbXXX, (p, b) -> p.set("eyeRoll3", b.readShort()));
         register(10835, fmbXXX, (p, b) -> p.set("eyeRoll4", b.readShort()));
 
-        register(104, fmbXXX, (p, b) -> p.set(Position.KEY_HOURS, b.readUnsignedInt() * 3600000)); //?
-        register(113, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_SERVICE, b.readInt()));
+        register(80, fmbXXX, (p, b) -> p.set("wheelBasedSpeed", b.readUnsignedInt()));
+        register(84, fmbXXX, (p, b) -> p.set("accelerationPedalPosition", b.readUnsignedInt()));
+        register(104, fmbXXX, (p, b) -> p.set(Position.KEY_HOURS, b.readUnsignedInt() * 3600000));
+        register(113, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_SERVICE, b.readInt() * 1000));
         register(139, fmbXXX, (p, b) -> p.set("grossCombVWeight", b.readUnsignedInt()));
     }
 
