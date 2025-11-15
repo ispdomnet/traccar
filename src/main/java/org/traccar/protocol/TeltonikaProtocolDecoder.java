@@ -48,9 +48,9 @@ import java.io.FileReader;
 
 
 public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
-	
-	
-	private static final Map<Long, String> OPERATORS = new HashMap<>();
+
+
+    private static final Map<Long, String> OPERATORS = new HashMap<>();
 
     static {
         try (BufferedReader reader = new BufferedReader(new FileReader("/opt/traccar/data/operators.csv"))) {
@@ -418,11 +418,15 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                     network.setRadioType("lte");
                 }
                 long operator = position.getInteger(Position.KEY_OPERATOR);
+
                 String operatorName = OPERATORS.getOrDefault(operator, String.valueOf(operator));
-                cellTower.setOperator(operatorName);
-				
+
+                cellTower.setOperator(operator);
+                position.set("operatorName", operatorName);
+
                 network.addCellTower(cellTower);
                 position.setNetwork(new Network(cellTower));
+
             }
         }
     }
