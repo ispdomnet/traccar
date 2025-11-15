@@ -43,7 +43,33 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+
 public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
+	
+	
+	private static final Map<Long, String> OPERATORS = new HashMap<>();
+
+    static {
+        try (BufferedReader reader = new BufferedReader(new FileReader("/opt/traccar/data/operators.csv"))) {
+            String line;
+            reader.readLine(); // skip header
+
+            while ((line = reader.readLine()) != null) {
+                String[] p = line.split(",");
+                int mcc = Integer.parseInt(p[0].trim());
+                int mnc = Integer.parseInt(p[1].trim());
+
+                long key = mcc * 100 + mnc;
+                OPERATORS.put(key, p[2].trim());
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load operators: " + e.getMessage());
+        }
+    }
+
 
     private static final int IMAGE_PACKET_MAX = 2048;
 
@@ -301,6 +327,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10834, fmbXXX, (p, b) -> p.set("eyeRoll3", b.readShort()));
         register(10835, fmbXXX, (p, b) -> p.set("eyeRoll4", b.readShort()));
 
+        register(216, fmbXXX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
         register(80, fmbXXX, (p, b) -> p.set("wheelBasedSpeed", b.readUnsignedInt()));
         register(84, fmbXXX, (p, b) -> p.set("accelerationPedalPosition", b.readUnsignedInt()));
         register(104, fmbXXX, (p, b) -> p.set(Position.KEY_HOURS, b.readUnsignedInt() * 3600000));
@@ -391,9 +418,9 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                     network.setRadioType("lte");
                 }
                 long operator = position.getInteger(Position.KEY_OPERATOR);
-                if (operator >= 1000) {
-                    cellTower.setOperator(operator);
-                }
+                String operatorName = OPERATORS.getOrDefault(operator, String.valueOf(operator));
+                cellTower.setOperator(operatorName);
+				
                 network.addCellTower(cellTower);
                 position.setNetwork(new Network(cellTower));
             }

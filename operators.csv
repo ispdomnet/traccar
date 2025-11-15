@@ -1,0 +1,197 @@
+MCC,MNC,Name
+255,01,Kyivstar Ukraine
+255,02,Vodafone Ukraine
+255,03,Kyivstar (Golden Telecom)
+255,05,Beeline Ukraine (старий код)
+255,06,Lifecell Ukraine
+259,01,Orange Moldova
+259,02,Unite Moldova
+259,05,Moldcell Moldova
+
+202,01,Cosmote Greece
+202,05,Vodafone Greece
+202,09,Wind Greece
+
+204,02,Tele2 Netherlands
+204,04,Vodafone Netherlands
+204,08,KPN Netherlands
+
+206,01,Proximus Belgium
+206,10,Orange Belgium
+206,20,Telenet Belgium
+
+208,01,Orange France
+208,10,SFR France
+208,15,Free Mobile France
+
+212,01,Monaco Telecom
+
+213,03,Andorra Telecom
+
+214,01,Vodafone Spain
+214,03,Orange Spain
+214,04,Yoigo Spain
+214,07,Movistar Spain
+
+216,01,Telekom Hungary
+216,30,Telenor Hungary
+216,70,Vodafone Hungary
+
+218,03,HT ERONET Bosnia
+218,05,m:tel Bosnia
+218,90,BH Telecom Bosnia
+
+219,01,VIPnet Croatia
+219,02,HT Croatia
+219,10,Tele2 Croatia
+
+220,01,VIP Mobile Serbia
+220,03,Telekom Srbija
+220,05,Telenor Serbia
+
+221,01,IPKO Kosovo
+221,06,Vala Kosovo
+
+222,01,Telecom Italia
+222,10,Vodafone Italy
+222,50,Iliad Italy
+222,88,WindTre Italy
+
+226,01,Orange Romania
+226,03,Telekom Romania
+226,05,RCS&RDS Romania
+226,10,Vodafone Romania
+
+228,01,Swisscom Switzerland
+228,02,Sunrise Switzerland
+228,03,Salt Switzerland
+
+230,01,T-Mobile Czech
+230,02,O2 Czech
+230,03,Vodafone Czech
+
+231,01,Orange Slovakia
+231,02,O2 Slovakia
+231,06,4ka Slovakia
+
+232,01,A1 Austria
+232,05,Drei Austria
+232,10,Magenta Austria
+
+234,10,O2 UK
+234,15,Vodafone UK
+234,20,Three UK
+234,30,EE UK
+
+235,01,Jersey Airtel
+235,02,JT Jersey
+235,91,Manx Telecom Isle of Man
+
+238,01,TDC Denmark
+238,02,Telenor Denmark
+238,03,Telia Denmark
+
+240,01,Telia Sweden
+240,02,Tele2 Sweden
+240,04,3 Sweden
+240,08,Vimla Sweden
+
+242,01,Telenor Norway
+242,02,Telia Norway
+242,05,Ice Norway
+
+244,03,DNA Finland
+244,05,Elisa Finland
+244,21,Telia Finland
+
+246,01,Bite Lithuania
+246,02,Tele2 Lithuania
+246,03,Telia Lithuania
+
+247,01,Tele2 Latvia
+247,02,LMT Latvia
+247,03,Bite Latvia
+
+248,01,Telia Estonia
+248,02,Tele2 Estonia
+248,03,Elisa Estonia
+
+250,01,MTS Russia (DELETED)
+250,02,MegaFon Russia (DELETED)
+250,20,Tele2 Russia (DELETED)
+250,99,Beeline Russia (DELETED)
+
+251,01,A1 Belarus (DELETED)
+257,01,A1 Belarus (DELETED)
+
+260,01,Plus Poland
+260,02,T-Mobile Poland
+260,03,Orange Poland
+260,06,Play Poland
+
+262,01,Telekom Germany
+262,02,Vodafone Germany
+262,03,E-Plus Germany (o2)
+262,07,O2 Germany
+262,09,Lyca Germany
+
+266,01,Gibtelecom Gibraltar
+
+268,01,Vodafone Portugal
+268,03,NOS Portugal
+268,06,MEO Portugal
+
+270,01,POST Luxembourg
+270,02,Tango Luxembourg
+270,77,Orange Luxembourg
+
+272,01,Vodafone Ireland
+272,02,3 Ireland
+272,03,Eir Ireland
+
+274,01,Siminn Iceland
+274,02,Vodafone Iceland
+274,04,Nova Iceland
+
+276,01,Telekom Albania
+276,02,One Albania
+276,04,Vodafone Albania
+
+278,01,Go Malta
+278,21,Melita Malta
+278,77,Vodafone Malta
+
+280,01,Cyta Cyprus
+280,10,MTN Cyprus
+280,20,PrimeTel Cyprus
+
+282,01,Vivacom Bulgaria
+282,02,A1 Bulgaria
+282,03,Yettel Bulgaria
+
+284,01,Mobiltel Bulgaria
+284,03,Vivacom Bulgaria
+
+286,01,Turkcell (only part of Europe: Thrace)
+286,02,Vodafone Turkey (European part only)
+286,03,Turk Telekom (European part only)
+
+288,01,Faroe Telecom
+288,02,Hey Faroes
+
+290,01,Tele Greenland
+
+293,40,A1 Slovenia
+293,41,Telemach Slovenia
+293,64,T-2 Slovenia
+
+295,01,FL1 Liechtenstein
+295,02,Telecom Liechtenstein
+295,05,Cablecom Liechtenstein
+
+297,01,Monaco Telecom
+
+302,220,TELUS Canada (DELETED)
+310,260,T-Mobile USA (DELETED)
+311,480,Verizon USA (DELETED)
+334,020,Telcel Mexico (DELETED)
