@@ -46,7 +46,6 @@ import java.util.function.Predicate;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-
 public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
 
 
@@ -382,11 +381,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             if (decoded) {
                 buf.readerIndex(index + length);
             } else {
-                if (id != 138 || id != 72) { //ігноруєм лишні іо
-                    position.set(Position.PREFIX_IO + id, readValue(buf, length));
-                } else {
-                    buf.skipBytes(length);
-                }
+                position.set(Position.PREFIX_IO + id, readValue(buf, length));
             }
         }
     }
@@ -596,6 +591,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             for (int j = 0; j < cnt; j++) {
                 int id = buf.readUnsignedShort();
                 int length = buf.readUnsignedShort();
+
                 //if (id == 256 || id == 325) { //це не VIN код
                 if (false) {
                     position.set(Position.KEY_VIN,
@@ -676,9 +672,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                         try {
                             byte[] bytes = javax.xml.bind.DatatypeConverter.parseHexBinary(hex);
                             String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
-                            //position.set(Position.PREFIX_IO + id, hex);
                             position.set(Position.PREFIX_IO + id, decoded);
-                            //position.set(Position.PREFIX_IO + id + "_text", decoded);
                         } catch (Exception e) {
                             position.set(Position.PREFIX_IO + id, hex);
                         }
@@ -689,7 +683,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             }
         }
 
-        decodeNetwork(position, model);
+        decodeNetwork(position, model); //декодування сім оператора
 
         if (model != null && model.matches("FM.6..")) {
             Long driverMsb = (Long) position.getAttributes().get("io195"); //карта водія
