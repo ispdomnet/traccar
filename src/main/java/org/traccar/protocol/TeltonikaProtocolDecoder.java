@@ -232,7 +232,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(11, fmbXXX, (p, b) -> p.set(Position.KEY_ICCID, String.valueOf(b.readLong())));
         //register(12, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.001)); //дубль
         //register(13, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort() * 0.01)); //дубль
-        register(16, any, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
+        //register(16, any, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt())); //ще один одометр
         register(17, any, (p, b) -> p.set("axisX", b.readShort()));
         register(18, any, (p, b) -> p.set("axisY", b.readShort()));
         register(19, any, (p, b) -> p.set("axisZ", b.readShort()));
@@ -327,7 +327,12 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10834, fmbXXX, (p, b) -> p.set("eyeRoll3", b.readShort()));
         register(10835, fmbXXX, (p, b) -> p.set("eyeRoll4", b.readShort()));
 
+        register(201, fmbXXX, (p, b) -> p.set("llc1FuelLevel", b.readShort()));
+        register(203, fmbXXX, (p, b) -> p.set("llc2FuelLevel", b.readShort()));
+        register(128, fmbXXX, (p, b) -> p.set("ambientTemp", b.readShort()));
         register(194, fmbXXX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
+        register(192, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
+        register(193, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
         register(10503, fmbXXX, (p, b) -> p.set("nextCalD", b.readUnsignedInt()));
         register(10504, fmbXXX, (p, b) -> p.set("d1EndLDrr", b.readUnsignedInt()));
         register(10505, fmbXXX, (p, b) -> p.set("d1EndLWrp", b.readUnsignedInt()));
@@ -377,7 +382,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             if (decoded) {
                 buf.readerIndex(index + length);
             } else {
-                if (id != 138) { //ігноруєм лишні іо
+                if (id != 138 || id != 72) { //ігноруєм лишні іо
                     position.set(Position.PREFIX_IO + id, readValue(buf, length));
                 } else {
                     buf.skipBytes(length);
