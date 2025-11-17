@@ -239,7 +239,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(21, any, (p, b) -> p.set(Position.KEY_RSSI, b.readUnsignedByte()));
         //перевод в вузли для чогось UnitsConverter.knotsFromKph
         register(24, fmbXXX, (p, b) -> p.setSpeed(UnitsConverter.knotsFromKph(b.readUnsignedShort())));
-        register(25, any, (p, b) -> p.set("bleTemp1", b.readShort() * 0.01));
+        //register(25, any, (p, b) -> p.set("bleTemp1", b.readShort() * 0.01)); //фігня
         register(26, any, (p, b) -> p.set("bleTemp2", b.readShort() * 0.01));
         register(27, any, (p, b) -> p.set("bleTemp3", b.readShort() * 0.01));
         register(28, any, (p, b) -> p.set("bleTemp4", b.readShort() * 0.01));
@@ -327,6 +327,11 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10834, fmbXXX, (p, b) -> p.set("eyeRoll3", b.readShort()));
         register(10835, fmbXXX, (p, b) -> p.set("eyeRoll4", b.readShort()));
 
+        register(194, fmbXXX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
+        register(10503, fmbXXX, (p, b) -> p.set("nextCalD", b.readUnsignedInt()));
+        register(10504, fmbXXX, (p, b) -> p.set("d1EndLDrr", b.readUnsignedInt()));
+        register(10505, fmbXXX, (p, b) -> p.set("d1EndLWrp", b.readUnsignedInt()));
+        register(10506, fmbXXX, (p, b) -> p.set("d1EndFSlWp", b.readUnsignedInt()));
         register(216, fmbXXX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
         register(80, fmbXXX, (p, b) -> p.set("wheelBasedSpeed", b.readUnsignedInt()));
         register(84, fmbXXX, (p, b) -> p.set("accelerationPedalPosition", b.readUnsignedInt()));
