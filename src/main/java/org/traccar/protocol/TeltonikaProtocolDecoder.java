@@ -244,7 +244,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(28, any, (p, b) -> p.set("bleTemp4", b.readShort() * 0.01));
         register(30, fmbXXX, (p, b) -> p.set("faultCount", b.readUnsignedByte()));
         register(31, fmbXXX, (p, b) -> p.set(Position.KEY_ENGINE_LOAD, b.readUnsignedByte()));
-        register(32, fmbXXX, (p, b) -> p.set(Position.KEY_COOLANT_TEMP, b.readByte()));
+        //register(32, fmbXXX, (p, b) -> p.set(Position.KEY_COOLANT_TEMP, b.readByte()));
         //register(36, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort())); //дубль
         register(43, fmbXXX, (p, b) -> p.set("milDistance", b.readUnsignedShort()));
         //register(57, fmbXXX, (p, b) -> p.set("hybridBatteryLevel", b.readByte())); //фігня
@@ -269,7 +269,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(88, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort())); //стара id - 85
         //register(87, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_ODOMETER, b.readUnsignedInt())); //фігня
         register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedInt())); //стара id - 89
-        //register(87, fmbXXX, (p, b) -> p.set("test_fuel_level", b.readUnsignedByte())); //тест
         //register(107, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1)); //дубль
         register(135, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort())); //стара id 110
         //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_BATTERY_LEVEL, b.readUnsignedByte())); //фігня
@@ -282,7 +281,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(180, any, (p, b) -> p.set(Position.PREFIX_OUT + 2, b.readUnsignedByte() > 0));
         register(181, any, (p, b) -> p.set(Position.KEY_PDOP, b.readUnsignedShort() * 0.1));
         register(182, any, (p, b) -> p.set(Position.KEY_HDOP, b.readUnsignedShort() * 0.1));
-        register(199, any, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
+        //register(199, any, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
         register(200, fmbXXX, (p, b) -> p.set("sleepMode", b.readUnsignedByte()));
         register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort())); //невідоме
         register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
