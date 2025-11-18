@@ -687,7 +687,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
 
         if (position.getAttributes().containsKey("llc1FuelLevel")
             && position.getAttributes().containsKey("llc2FuelLevel")) {
-        position.set("llcFuelTotal", 2);
+        position.set("llcFuelTotal", 0);
         }
 
         if (model != null && model.matches("FM.6..")) {
