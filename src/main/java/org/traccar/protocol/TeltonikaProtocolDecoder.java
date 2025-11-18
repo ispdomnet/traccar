@@ -384,15 +384,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                 position.set(Position.PREFIX_IO + id, readValue(buf, length));
             }
         }
-        try {
-            Number v1 = (Number) position.getAttributes().get("llc1FuelLevel");
-            Number v2 = (Number) position.getAttributes().get("llc2FuelLevel");
-
-            if (v1 != null && v2 != null) {
-                int totalRaw = v1.intValue() + v2.intValue();
-                position.getAttributes().put("llcFuelTotal", totalRaw);
-            }
-        } catch (Exception ignored) { }
     }
 
     private void decodeCell(
@@ -693,6 +684,11 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         }
 
         decodeNetwork(position, model); //декодування сім оператора
+
+        if (position.getAttributes().containsKey("llc1FuelLevel")
+            && position.getAttributes().containsKey("llc2FuelLevel")) {
+        position.set("llcFuelTotal", "");
+        }
 
         if (model != null && model.matches("FM.6..")) {
             Long driverMsb = (Long) position.getAttributes().get("io195"); //карта водія
