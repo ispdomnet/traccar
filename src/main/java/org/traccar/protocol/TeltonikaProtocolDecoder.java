@@ -222,125 +222,34 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         Predicate<String> fmbXXX = (m) -> m != null && (m.startsWith("FM") || m.equals("MTB100") || m.equals("MSP500"));
         Predicate<String> fmb6XX = (m) -> m != null && m.matches("FM.6..");
 
-        register(1, any, (p, b) -> p.set(Position.PREFIX_IN + 1, b.readUnsignedByte() > 0));
-        register(2, any, (p, b) -> p.set(Position.PREFIX_IN + 2, b.readUnsignedByte() > 0));
-        register(3, any, (p, b) -> p.set(Position.PREFIX_IN + 3, b.readUnsignedByte() > 0));
-        register(4, any, (p, b) -> p.set(Position.PREFIX_IN + 4, b.readUnsignedByte() > 0));
-        register(9, fmbXXX, (p, b) -> p.set(Position.PREFIX_ADC + 1, b.readUnsignedShort() * 0.001));
-        register(10, fmbXXX, (p, b) -> p.set(Position.PREFIX_ADC + 2, b.readUnsignedShort() * 0.001));
-        register(11, fmbXXX, (p, b) -> p.set(Position.KEY_ICCID, String.valueOf(b.readLong())));
-        //register(12, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.001)); //дубль
-        //register(13, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort() * 0.01)); //дубль
-        //register(16, any, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt())); //ще один одометр
-        register(17, any, (p, b) -> p.set("axisX", b.readShort()));
-        register(18, any, (p, b) -> p.set("axisY", b.readShort()));
-        register(19, any, (p, b) -> p.set("axisZ", b.readShort()));
-        register(21, any, (p, b) -> p.set(Position.KEY_RSSI, b.readUnsignedByte()));
-        //перевод в вузли для чогось UnitsConverter.knotsFromKph
-        register(24, fmbXXX, (p, b) -> p.setSpeed(UnitsConverter.knotsFromKph(b.readUnsignedShort())));
-        //register(25, any, (p, b) -> p.set("bleTemp1", b.readShort() * 0.01)); //фігня
-        register(26, any, (p, b) -> p.set("bleTemp2", b.readShort() * 0.01));
-        register(27, any, (p, b) -> p.set("bleTemp3", b.readShort() * 0.01));
-        register(28, any, (p, b) -> p.set("bleTemp4", b.readShort() * 0.01));
-        register(30, fmbXXX, (p, b) -> p.set("faultCount", b.readUnsignedByte()));
-        register(31, fmbXXX, (p, b) -> p.set(Position.KEY_ENGINE_LOAD, b.readUnsignedByte()));
-        //register(32, fmbXXX, (p, b) -> p.set(Position.KEY_COOLANT_TEMP, b.readByte()));
-        //register(36, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort())); //дубль
-        register(43, fmbXXX, (p, b) -> p.set("milDistance", b.readUnsignedShort()));
-        //register(57, fmbXXX, (p, b) -> p.set("hybridBatteryLevel", b.readByte())); //фігня
-        register(66, any, (p, b) -> p.set(Position.KEY_POWER, b.readUnsignedShort() * 0.001));
-        register(67, any, (p, b) -> p.set(Position.KEY_BATTERY, b.readUnsignedShort() * 0.001));
-        register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort() * 0.001));
-        register(72, fmbXXX, (p, b) -> p.set(Position.PREFIX_TEMP + 1, b.readInt() * 0.1));
-        register(73, fmbXXX, (p, b) -> p.set(Position.PREFIX_TEMP + 2, b.readInt() * 0.1));
-        register(74, fmbXXX, (p, b) -> p.set(Position.PREFIX_TEMP + 3, b.readInt() * 0.1));
-        register(75, fmbXXX, (p, b) -> p.set(Position.PREFIX_TEMP + 4, b.readInt() * 0.1));
-        register(78, any, (p, b) -> {
+        register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
             if (driverUniqueId != 0) {
                 p.set(Position.KEY_DRIVER_UNIQUE_ID, String.format("%016X", driverUniqueId));
             }
         });
-        //register(80, fmbXXX, (p, b) -> p.set("dataMode", b.readUnsignedByte())); //фігня
-        //register(81, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_SPEED, b.readUnsignedByte())); //фігня
-        //register(82, fmbXXX, (p, b) -> p.set(Position.KEY_THROTTLE, b.readUnsignedByte())); //фігня
-        register(86, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt())); //стара id - 83
-        //register(84, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL, b.readUnsignedShort() * 0.1));
-        register(88, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort())); //стара id - 85
-        //register(87, fmbXXX, (p, b) -> p.set(Position.KEY_OBD_ODOMETER, b.readUnsignedInt())); //фігня
-        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedInt())); //стара id - 89
-        //register(107, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt() * 0.1)); //дубль
-        register(135, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort())); //стара id 110
-        //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_BATTERY_LEVEL, b.readUnsignedByte())); //фігня
-        register(115, fmbXXX, (p, b) -> p.set(Position.KEY_ENGINE_TEMP, b.readShort() * 0.1));
-        register(701, fmb6XX, (p, b) -> p.set("bleTemp1", b.readShort() * 0.01));
-        register(702, fmb6XX, (p, b) -> p.set("bleTemp2", b.readShort() * 0.01));
-        register(703, fmb6XX, (p, b) -> p.set("bleTemp3", b.readShort() * 0.01));
-        register(704, fmb6XX, (p, b) -> p.set("bleTemp4", b.readShort() * 0.01));
-        register(179, any, (p, b) -> p.set(Position.PREFIX_OUT + 1, b.readUnsignedByte() > 0));
-        register(180, any, (p, b) -> p.set(Position.PREFIX_OUT + 2, b.readUnsignedByte() > 0));
-        register(181, any, (p, b) -> p.set(Position.KEY_PDOP, b.readUnsignedShort() * 0.1));
-        register(182, any, (p, b) -> p.set(Position.KEY_HDOP, b.readUnsignedShort() * 0.1));
-        //register(199, any, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
-        register(200, fmbXXX, (p, b) -> p.set("sleepMode", b.readUnsignedByte()));
-        register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort())); //невідоме
-        register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
-        //register(232, fmbXXX, (p, b) -> p.set("cngStatus", b.readUnsignedByte() > 0)); //фігня
-        //register(233, fmbXXX, (p, b) -> p.set("cngUsed", b.readUnsignedInt() * 0.1)); //фігня
-        //register(234, fmbXXX, (p, b) -> p.set("cngLevel", b.readUnsignedShort())); //фігня
-        //register(235, fmbXXX, (p, b) -> p.set("oilLevel", b.readUnsignedByte())); //фігня
-        register(236, any, (p, b) -> p.addAlarm(b.readUnsignedByte() > 0 ? Position.ALARM_GENERAL : null));
-        register(239, any, (p, b) -> p.set(Position.KEY_IGNITION, b.readUnsignedByte() > 0));
-        register(240, any, (p, b) -> p.set(Position.KEY_MOTION, b.readUnsignedByte() > 0));
-        register(241, any, (p, b) -> p.set(Position.KEY_OPERATOR, b.readUnsignedInt()));
-        register(246, fmbXXX, (p, b) -> p.addAlarm(b.readUnsignedByte() > 0 ? Position.ALARM_TOW : null));
-        register(247, fmbXXX, (p, b) -> p.addAlarm(b.readUnsignedByte() > 0 ? Position.ALARM_ACCIDENT : null));
-        register(249, fmbXXX, (p, b) -> p.addAlarm(b.readUnsignedByte() > 0 ? Position.ALARM_JAMMING : null));
-        register(251, fmbXXX, (p, b) -> p.addAlarm(b.readUnsignedByte() > 0 ? Position.ALARM_IDLE : null));
-        register(252, fmbXXX, (p, b) -> p.addAlarm(b.readUnsignedByte() > 0 ? Position.ALARM_POWER_CUT : null));
-        register(253, any, (p, b) -> {
-            switch (b.readUnsignedByte()) {
-                case 1 -> p.addAlarm(Position.ALARM_ACCELERATION);
-                case 2 -> p.addAlarm(Position.ALARM_BRAKING);
-                case 3 -> p.addAlarm(Position.ALARM_CORNERING);
-            }
-        });
-        register(175, fmbXXX, (p, b) -> {
-            p.addAlarm(b.readUnsignedByte() > 0 ? Position.ALARM_GEOFENCE_ENTER : Position.ALARM_GEOFENCE_EXIT);
-        });
-        register(636, fmbXXX, (p, b) -> p.set("cid4g", b.readUnsignedInt()));
-        register(662, fmbXXX, (p, b) -> p.set(Position.KEY_DOOR, b.readUnsignedByte() > 0));
-        register(10644, fmbXXX, (p, b) -> p.set("tempProbe1", b.readShort() / 100.0));
-        register(10645, fmbXXX, (p, b) -> p.set("tempProbe2", b.readShort() / 100.0));
-        register(10646, fmbXXX, (p, b) -> p.set("tempProbe3", b.readShort() / 100.0));
-        register(10647, fmbXXX, (p, b) -> p.set("tempProbe4", b.readShort() / 100.0));
-        register(10648, fmbXXX, (p, b) -> p.set("tempProbe5", b.readShort() / 100.0));
-        register(10649, fmbXXX, (p, b) -> p.set("tempProbe6", b.readShort() / 100.0));
-        register(10800, fmbXXX, (p, b) -> p.set("eyeTemp1", b.readShort() / 100.0));
-        register(10801, fmbXXX, (p, b) -> p.set("eyeTemp2", b.readShort() / 100.0));
-        register(10802, fmbXXX, (p, b) -> p.set("eyeTemp3", b.readShort() / 100.0));
-        register(10803, fmbXXX, (p, b) -> p.set("eyeTemp4", b.readShort() / 100.0));
-        register(10832, fmbXXX, (p, b) -> p.set("eyeRoll1", b.readShort()));
-        register(10833, fmbXXX, (p, b) -> p.set("eyeRoll2", b.readShort()));
-        register(10834, fmbXXX, (p, b) -> p.set("eyeRoll3", b.readShort()));
-        register(10835, fmbXXX, (p, b) -> p.set("eyeRoll4", b.readShort()));
+        register(80, fmb6XX, (p, b) -> p.set("wheelBasedSpeed", b.readUnsignedInt()));
+        register(84, fmb6XX, (p, b) -> p.set("accelerationPedalPosition", b.readUnsignedInt()));
+        //register(104, fmbXXX, (p, b) -> p.set(Position.KEY_HOURS, b.readUnsignedInt() * 3600000));
+        //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_SERVICE, b.readInt() * 1000));
+        register(128, fmb6XX, (p, b) -> p.set("ambientTemp", b.readShort()));
+        register(139, fmb6XX, (p, b) -> p.set("grossCombVWeight", b.readUnsignedInt()));
+        //register(192, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
+        //register(193, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
+        register(194, fmb6XX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
+        register(201, fmb6XX, (p, b) -> p.set("llc1FuelLevel", b.readShort()));
+        register(203, fmb6XX, (p, b) -> p.set("llc2FuelLevel", b.readShort()));
+        //register(216, fmb6XX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
 
-        register(201, fmbXXX, (p, b) -> p.set("llc1FuelLevel", b.readShort()));
-        register(203, fmbXXX, (p, b) -> p.set("llc2FuelLevel", b.readShort()));
-        register(128, fmbXXX, (p, b) -> p.set("ambientTemp", b.readShort()));
-        register(194, fmbXXX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
-        register(192, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
-        register(193, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
-        register(10503, fmbXXX, (p, b) -> p.set("nextCalD", b.readUnsignedInt()));
-        register(10504, fmbXXX, (p, b) -> p.set("d1EndLDrr", b.readUnsignedInt()));
-        register(10505, fmbXXX, (p, b) -> p.set("d1EndLWrp", b.readUnsignedInt()));
-        register(10506, fmbXXX, (p, b) -> p.set("d1EndFSlWp", b.readUnsignedInt()));
-        register(216, fmbXXX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
-        register(80, fmbXXX, (p, b) -> p.set("wheelBasedSpeed", b.readUnsignedInt()));
-        register(84, fmbXXX, (p, b) -> p.set("accelerationPedalPosition", b.readUnsignedInt()));
-        register(104, fmbXXX, (p, b) -> p.set(Position.KEY_HOURS, b.readUnsignedInt() * 3600000));
-        register(113, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_SERVICE, b.readInt() * 1000));
-        register(139, fmbXXX, (p, b) -> p.set("grossCombVWeight", b.readUnsignedInt()));
+        register(10503, fmb6XX, (p, b) -> p.set("nextCalD", b.readUnsignedInt()));
+        register(10504, fmb6XX, (p, b) -> p.set("d1EndLDrr", b.readUnsignedInt()));
+        register(10505, fmb6XX, (p, b) -> p.set("d1EndLWrp", b.readUnsignedInt()));
+        register(10506, fmb6XX, (p, b) -> p.set("d1EndFSlWp", b.readUnsignedInt()));
+        register(10518, fmb6XX, (p, b) -> p.set("d1Name", b.readLong()));
+        register(10519, fmb6XX, (p, b) -> p.set("d1SName", b.readLong()));
+        register(10520, fmb6XX, (p, b) -> p.set("d2Name", b.readLong()));
+        register(10521, fmb6XX, (p, b) -> p.set("d2SName", b.readLong()));
+        register(10800, fmbXXX, (p, b) -> p.set("eyeTemp1", b.readShort() / 100.0));
     }
 
     private void decodeGh3000Parameter(Position position, int id, ByteBuf buf, int length) {
@@ -665,19 +574,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                         }
                     }
                 } else {
-                    String hex = ByteBufUtil.hexDump(buf.readSlice(length));
-
-                    if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я, прізвище водія 1, 2
-                        try {
-                            byte[] bytes = javax.xml.bind.DatatypeConverter.parseHexBinary(hex);
-                            String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
-                            position.set(Position.PREFIX_IO + id, decoded);
-                        } catch (Exception e) {
-                            position.set(Position.PREFIX_IO + id, hex);
-                        }
-                    } else {
-                        position.set(Position.PREFIX_IO + id, hex);
-                    }
+                    position.set(Position.PREFIX_IO + id, ByteBufUtil.hexDump(buf.readSlice(length)));
                 }
             }
         }
