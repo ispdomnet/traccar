@@ -213,10 +213,11 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         };
     }
 
-    private static String readFixedString(ByteBuf buf, int length) {
-        byte[] bytes = new byte[length];
-        buf.readBytes(bytes);
-        return new String(bytes, StandardCharsets.US_ASCII).trim();
+    private static String readVariableAscii(ByteBuf buf) {
+        int len = buf.readUnsignedByte();
+        byte[] data = new byte[len];
+        buf.readBytes(data);
+        return new String(data, StandardCharsets.US_ASCII);
     }
 
     private static void register(int id, Predicate<String> predicate, BiConsumer<Position, ByteBuf> handler) {
@@ -226,7 +227,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
     static {
         Predicate<String> any = (m) -> true;
         Predicate<String> fmbXXX = (m) -> m != null && (m.startsWith("FM") || m.equals("MTB100") || m.equals("MSP500"));
-        Predicate<String> fmb6XX = (m) -> m != null && m.matches("FM.6..");
+        Predicate<String> fmb6XX = (m) -> m != null && m.startsWith("FM.6..");
 
         register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
@@ -251,10 +252,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10504, fmb6XX, (p, b) -> p.set("d1EndLDrr", b.readUnsignedInt()));
         register(10505, fmb6XX, (p, b) -> p.set("d1EndLWrp", b.readUnsignedInt()));
         register(10506, fmb6XX, (p, b) -> p.set("d1EndFSlWp", b.readUnsignedInt()));
-        register(10518, fmb6XX, (p, b) -> p.set("d1Name", readFixedString(b, 36)));
-        register(10519, fmb6XX, (p, b) -> p.set("d1SName", readFixedString(b, 36)));
-        register(10520, fmb6XX, (p, b) -> p.set("d2Name", readFixedString(b, 36)));
-        register(10521, fmb6XX, (p, b) -> p.set("d2SName", readFixedString(b, 36)));
         register(10800, fmbXXX, (p, b) -> p.set("eyeTemp1", b.readShort() / 100.0));
     }
 
@@ -580,7 +577,19 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                         }
                     }
                 } else {
-                    position.set(Position.PREFIX_IO + id, ByteBufUtil.hexDump(buf.readSlice(length)));
+                    String hex = ByteBufUtil.hexDump(buf.readSlice(length));
+
+                    if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я, прізвище водія 1, 2
+                        try {
+                            byte[] bytes = javax.xml.bind.DatatypeConverter.parseHexBinary(hex);
+                            String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
+                            position.set(Position.PREFIX_IO + id, decoded);
+                        } catch (Exception e) {
+                            position.set(Position.PREFIX_IO + id, hex);
+                        }
+                    } else {
+                        position.set(Position.PREFIX_IO + id, hex);
+                    }
                 }
             }
         }
