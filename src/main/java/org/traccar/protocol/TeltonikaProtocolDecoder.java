@@ -229,6 +229,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         Predicate<String> fmbXXX = (m) -> m != null && (m.startsWith("FM") || m.equals("MTB100") || m.equals("MSP500"));
         Predicate<String> fmb6XX = (m) -> m != null && m.matches("FM.6..");
 
+        register(24, fmbXXX, (p, b) -> p.setSpeed(UnitsConverter.knotsFromKph(b.readUnsignedShort())));
         register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
             if (driverUniqueId != 0) {
@@ -251,7 +252,11 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(201, fmb6XX, (p, b) -> p.set("llc1FuelLevel", b.readShort()));
         register(203, fmb6XX, (p, b) -> p.set("llc2FuelLevel", b.readShort()));
         register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort()));
+        register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
         //register(216, fmb6XX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
+        register(239, any, (p, b) -> p.set(Position.KEY_IGNITION, b.readUnsignedByte() > 0));
+        register(240, any, (p, b) -> p.set(Position.KEY_MOTION, b.readUnsignedByte() > 0));
+        register(241, any, (p, b) -> p.set(Position.KEY_OPERATOR, b.readUnsignedInt()));
 
         register(10503, fmb6XX, (p, b) -> p.set("nextCalD", b.readUnsignedInt()));
         register(10504, fmb6XX, (p, b) -> p.set("d1EndLDrr", b.readUnsignedInt()));
