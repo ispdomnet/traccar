@@ -213,6 +213,12 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         };
     }
 
+    private static String readFixedString(ByteBuf buf, int length) {
+        byte[] bytes = new byte[length];
+        buf.readBytes(bytes);
+        return new String(bytes, StandardCharsets.US_ASCII).trim();
+    }
+
     private static void register(int id, Predicate<String> predicate, BiConsumer<Position, ByteBuf> handler) {
         PARAMETERS.computeIfAbsent(id, key -> new HashMap<>()).put(predicate, handler);
     }
@@ -245,10 +251,10 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10504, fmb6XX, (p, b) -> p.set("d1EndLDrr", b.readUnsignedInt()));
         register(10505, fmb6XX, (p, b) -> p.set("d1EndLWrp", b.readUnsignedInt()));
         register(10506, fmb6XX, (p, b) -> p.set("d1EndFSlWp", b.readUnsignedInt()));
-        register(10518, fmb6XX, (p, b) -> p.set("d1Name", b.readLong()));
-        register(10519, fmb6XX, (p, b) -> p.set("d1SName", b.readLong()));
-        register(10520, fmb6XX, (p, b) -> p.set("d2Name", b.readLong()));
-        register(10521, fmb6XX, (p, b) -> p.set("d2SName", b.readLong()));
+        register(10518, fmb6XX, (p, b) -> p.set("d1Name", readFixedString(b, 36)));
+        register(10519, fmb6XX, (p, b) -> p.set("d1SName", readFixedString(b, 36)));
+        register(10520, fmb6XX, (p, b) -> p.set("d2Name", readFixedString(b, 36)));
+        register(10521, fmb6XX, (p, b) -> p.set("d2SName", readFixedString(b, 36)));
         register(10800, fmbXXX, (p, b) -> p.set("eyeTemp1", b.readShort() / 100.0));
     }
 
