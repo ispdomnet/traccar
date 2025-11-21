@@ -227,7 +227,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
     static {
         Predicate<String> any = (m) -> true;
         Predicate<String> fmbXXX = (m) -> m != null && (m.startsWith("FM") || m.equals("MTB100") || m.equals("MSP500"));
-        Predicate<String> fmb6XX = (m) -> m != null && m.startsWith("FM.6..");
+        Predicate<String> fmb6XX = (m) -> m != null && m.matches("FM.6..");
 
         register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
@@ -237,15 +237,20 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         });
         register(80, fmb6XX, (p, b) -> p.set("wheelBasedSpeed", b.readUnsignedInt()));
         register(84, fmb6XX, (p, b) -> p.set("accelerationPedalPosition", b.readUnsignedInt()));
-        //register(104, fmbXXX, (p, b) -> p.set(Position.KEY_HOURS, b.readUnsignedInt() * 3600000));
-        //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_SERVICE, b.readInt() * 1000));
+        register(86, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt()));
+        register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedInt()));
+        register(88, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
+        register(104, fmbXXX, (p, b) -> p.set(Position.KEY_HOURS, b.readUnsignedInt() * 3600000));
+        register(113, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_SERVICE, b.readInt() * 1000));
         register(128, fmb6XX, (p, b) -> p.set("ambientTemp", b.readShort()));
+        register(135, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort()));
         register(139, fmb6XX, (p, b) -> p.set("grossCombVWeight", b.readUnsignedInt()));
         //register(192, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
         //register(193, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
         register(194, fmb6XX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
         register(201, fmb6XX, (p, b) -> p.set("llc1FuelLevel", b.readShort()));
         register(203, fmb6XX, (p, b) -> p.set("llc2FuelLevel", b.readShort()));
+        register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort()));
         //register(216, fmb6XX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
 
         register(10503, fmb6XX, (p, b) -> p.set("nextCalD", b.readUnsignedInt()));
