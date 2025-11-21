@@ -240,7 +240,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(67, any, (p, b) -> p.set(Position.KEY_BATTERY, b.readUnsignedShort() * 0.001));
         register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort() * 0.001));
         register(69, fmb6XX, (p, b) -> p.set("d1CumDT", b.readUnsignedShort()));
-        
         register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
             if (driverUniqueId != 0) {
