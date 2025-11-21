@@ -230,6 +230,17 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         Predicate<String> fmb6XX = (m) -> m != null && m.matches("FM.6..");
 
         register(24, fmbXXX, (p, b) -> p.setSpeed(UnitsConverter.knotsFromKph(b.readUnsignedShort())));
+        register(56, fmb6XX, (p, b) -> p.set("d1CDT", b.readUnsignedShort()));
+        register(57, fmb6XX, (p, b) -> p.set("d2CDT", b.readUnsignedShort()));
+        register(58, fmb6XX, (p, b) -> p.set("d1CBT", b.readUnsignedShort()));
+        register(59, fmb6XX, (p, b) -> p.set("d2CBT", b.readUnsignedShort()));
+        register(60, fmb6XX, (p, b) -> p.set("d1SAD", b.readUnsignedShort()));
+        register(61, fmb6XX, (p, b) -> p.set("d2SAD", b.readUnsignedShort()));
+        register(66, any, (p, b) -> p.set(Position.KEY_POWER, b.readUnsignedShort() * 0.001));
+        register(67, any, (p, b) -> p.set(Position.KEY_BATTERY, b.readUnsignedShort() * 0.001));
+        register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort() * 0.001));
+        register(69, fmb6XX, (p, b) -> p.set("d1CumDT", b.readUnsignedShort()));
+        
         register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
             if (driverUniqueId != 0) {
@@ -246,6 +257,8 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(128, fmb6XX, (p, b) -> p.set("ambientTemp", b.readShort()));
         register(135, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_CONSUMPTION, b.readUnsignedShort()));
         register(139, fmb6XX, (p, b) -> p.set("grossCombVWeight", b.readUnsignedInt()));
+        register(181, any, (p, b) -> p.set(Position.KEY_PDOP, b.readUnsignedShort() * 0.1));
+        register(182, any, (p, b) -> p.set(Position.KEY_HDOP, b.readUnsignedShort() * 0.1));
         //register(192, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
         //register(193, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
         register(194, fmb6XX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
@@ -262,6 +275,24 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10504, fmb6XX, (p, b) -> p.set("d1EndLDrr", b.readUnsignedInt()));
         register(10505, fmb6XX, (p, b) -> p.set("d1EndLWrp", b.readUnsignedInt()));
         register(10506, fmb6XX, (p, b) -> p.set("d1EndFSlWp", b.readUnsignedInt()));
+        register(10507, fmb6XX, (p, b) -> p.set("d1DDT", b.readUnsignedShort()));
+        register(10508, fmb6XX, (p, b) -> p.set("d1WDT", b.readUnsignedShort()));
+        register(10509, fmb6XX, (p, b) -> p.set("d1TLDRP", b.readUnsignedShort()));
+        register(10522, fmb6XX, (p, b) -> p.set("d1TLWRP", b.readUnsignedShort()));
+        register(10524, fmb6XX, (p, b) -> p.set("d1MinDR", b.readUnsignedShort()));
+        register(10526, fmb6XX, (p, b) -> p.set("d1MinWR", b.readUnsignedShort()));
+        register(10528, fmb6XX, (p, b) -> p.set("d1DoNBR", b.readUnsignedShort()));
+        register(10530, fmb6XX, (p, b) -> p.set("d1RTUNBR", b.readUnsignedShort()));
+        register(10532, fmb6XX, (p, b) -> p.set("d1RCDT", b.readUnsignedShort()));
+        register(10533, fmb6XX, (p, b) -> p.set("d1RDTS", b.readUnsignedShort()));
+        register(10534, fmb6XX, (p, b) -> p.set("d1RDTW", b.readUnsignedShort()));
+        register(10535, fmb6XX, (p, b) -> p.set("d1OC1W", b.readUnsignedShort()));
+        register(10536, fmb6XX, (p, b) -> p.set("d1OC2W", b.readUnsignedShort()));
+        register(10537, fmb6XX, (p, b) -> p.set("d1OC3W", b.readUnsignedShort()));
+        register(10539, fmb6XX, (p, b) -> p.set("d1RTCBR", b.readUnsignedShort()));
+        register(10540, fmb6XX, (p, b) -> p.set("d1TLNDP", b.readUnsignedShort()));
+        register(10541, fmb6XX, (p, b) -> p.set("d1DoNDP", b.readUnsignedShort()));
+
         register(10800, fmbXXX, (p, b) -> p.set("eyeTemp1", b.readShort() / 100.0));
     }
 
