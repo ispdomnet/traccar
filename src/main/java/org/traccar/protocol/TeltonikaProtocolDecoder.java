@@ -239,7 +239,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(66, any, (p, b) -> p.set(Position.KEY_POWER, b.readUnsignedShort() * 0.001));
         register(67, any, (p, b) -> p.set(Position.KEY_BATTERY, b.readUnsignedShort() * 0.001));
         register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort() * 0.001));
-        register(69, fmb6XX, (p, b) -> p.set("d1CumDT", b.readUnsignedShort()));
+        register(69, fmb6XX, (p, b) -> p.set("d1CmDT", b.readUnsignedShort()));
         register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
             if (driverUniqueId != 0) {
@@ -258,6 +258,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(139, fmb6XX, (p, b) -> p.set("grossCombVWeight", b.readUnsignedInt()));
         register(181, any, (p, b) -> p.set(Position.KEY_PDOP, b.readUnsignedShort() * 0.1));
         register(182, any, (p, b) -> p.set(Position.KEY_HDOP, b.readUnsignedShort() * 0.1));
+        register(191, fmb6XX, (p, b) -> p.set("tahoSpeed", UnitsConverter.knotsFromKph(b.readUnsignedShort())));
         //register(192, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
         //register(193, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
         register(194, fmb6XX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
@@ -266,10 +267,12 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort()));
         register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
         //register(216, fmb6XX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
+        register(229, fmb6XX, (p, b) -> p.set("adBLstat", b.readUnsignedByte()));
         register(239, any, (p, b) -> p.set(Position.KEY_IGNITION, b.readUnsignedByte() > 0));
         register(240, any, (p, b) -> p.set(Position.KEY_MOTION, b.readUnsignedByte() > 0));
         register(241, any, (p, b) -> p.set(Position.KEY_OPERATOR, b.readUnsignedInt()));
 
+        register(10455, fmb6XX, (p, b) -> p.set("adBL", b.readUnsignedByte()));
         register(10503, fmb6XX, (p, b) -> p.set("nextCalD", b.readUnsignedInt()));
         register(10504, fmb6XX, (p, b) -> p.set("d1EndLDrr", b.readUnsignedInt()));
         register(10505, fmb6XX, (p, b) -> p.set("d1EndLWrp", b.readUnsignedInt()));
