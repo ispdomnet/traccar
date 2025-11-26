@@ -290,6 +290,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(10534, fmb6XX, (p, b) -> p.set("d1RDTW", b.readUnsignedShort()));
         register(10535, fmb6XX, (p, b) -> p.set("d1OC1W", b.readUnsignedShort()));
         register(10536, fmb6XX, (p, b) -> p.set("d1OC2W", b.readUnsignedShort()));
+        register(10538, fmb6XX, (p, b) -> p.set("d1Ainfo", b.readUnsignedShort()));
         register(10537, fmb6XX, (p, b) -> p.set("d1OC3W", b.readUnsignedShort()));
         register(10539, fmb6XX, (p, b) -> p.set("d1RTCBR", b.readUnsignedShort()));
         register(10540, fmb6XX, (p, b) -> p.set("d1TLNDP", b.readUnsignedShort()));
