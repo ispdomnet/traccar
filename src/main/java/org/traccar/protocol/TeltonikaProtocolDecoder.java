@@ -620,20 +620,17 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                             }
                         }
                     }
-                } else {
+                } else if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я, прізвище водія 1, 2
                     String hex = ByteBufUtil.hexDump(buf.readSlice(length));
-
-                    if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я, прізвище водія 1, 2
-                        try {
-                            byte[] bytes = javax.xml.bind.DatatypeConverter.parseHexBinary(hex);
-                            String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
-                            position.set(Position.PREFIX_IO + id, decoded);
-                        } catch (Exception e) {
-                            position.set(Position.PREFIX_IO + id, hex);
-                        }
-                    } else {
+                    try {
+                        byte[] bytes = javax.xml.bind.DatatypeConverter.parseHexBinary(hex);
+                        String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
+                        position.set(Position.PREFIX_IO + id, decoded);
+                    } catch (Exception e) {
                         position.set(Position.PREFIX_IO + id, hex);
                     }
+                } else {
+                        position.set(Position.PREFIX_IO + id, ByteBufUtil.hexDump(buf.readSlice(length)));
                 }
             }
         }
