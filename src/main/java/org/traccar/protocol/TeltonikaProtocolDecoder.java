@@ -33,7 +33,6 @@ import org.traccar.model.Network;
 import org.traccar.model.Position;
 
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
@@ -238,7 +237,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(61, fmb6XX, (p, b) -> p.set("d2SAD", b.readUnsignedShort()));
         register(66, any, (p, b) -> p.set(Position.KEY_POWER, b.readUnsignedShort() * 0.001));
         register(67, any, (p, b) -> p.set(Position.KEY_BATTERY, b.readUnsignedShort() * 0.001));
-        register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort() * 0.001));
+        register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort())); //delete?
         register(69, fmb6XX, (p, b) -> p.set("d1CmDT", b.readUnsignedShort()));
         register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
@@ -267,7 +266,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort()));
         register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
         //register(216, fmb6XX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
-        register(229, fmb6XX, (p, b) -> p.set("adBLstat", b.readUnsignedByte()));
         register(239, any, (p, b) -> p.set(Position.KEY_IGNITION, b.readUnsignedByte() > 0));
         register(240, any, (p, b) -> p.set(Position.KEY_MOTION, b.readUnsignedByte() > 0));
         register(241, any, (p, b) -> p.set(Position.KEY_OPERATOR, b.readUnsignedInt()));
@@ -620,14 +618,22 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                             }
                         }
                     }
-                } else if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я, прізвище водія 1, 2
-                    String hex = ByteBufUtil.hexDump(buf.readSlice(length));
-                    try {
-                        byte[] bytes = javax.xml.bind.DatatypeConverter.parseHexBinary(hex);
-                        String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
-                        position.set(Position.PREFIX_IO + id, decoded);
-                    } catch (Exception e) {
-                        position.set(Position.PREFIX_IO + id, hex);
+                } else if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я+прізвище водія 1, 2
+                    int expected = 36;
+                    if (length > buf.readableBytes()) {
+                        buf.skipBytes(buf.readableBytes());
+                        return;
+                    }
+
+                    int readLen = Math.min(length, expected);
+                    byte[] bytes = new byte[readLen];
+                    buf.readBytes(bytes);
+
+                    String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
+                    position.set(Position.PREFIX_IO + id, decoded);
+
+                    if (length > readLen) {
+                        buf.skipBytes(length - readLen);
                     }
                 } else {
                         position.set(Position.PREFIX_IO + id, ByteBufUtil.hexDump(buf.readSlice(length)));
@@ -640,33 +646,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         if (position.getAttributes().containsKey("llc1FuelLevel")
             && position.getAttributes().containsKey("llc2FuelLevel")) {
         position.set("llcFuelTotal", 0);
-        }
-
-        if (model != null && model.matches("FM.6..")) {
-            Long driverMsb = (Long) position.getAttributes().get("io195"); //карта водія
-            Long driverLsb = (Long) position.getAttributes().get("io196");
-            if (driverMsb != null && driverLsb != null) {
-                String driver = new String(ByteBuffer.allocate(16).putLong(driverMsb).putLong(driverLsb).array());
-                position.set(Position.KEY_DRIVER_UNIQUE_ID, driver);
-                position.getAttributes().remove("io195");
-                position.getAttributes().remove("io196");
-            }
-            Long vehRnp1 = (Long) position.getAttributes().get("io231"); //номера машини
-            Long vehRnp2 = (Long) position.getAttributes().get("io232");
-            if (vehRnp2 != null && vehRnp1 != null) {
-                String vehicleRnp = new String(ByteBuffer.allocate(16).putLong(vehRnp1).putLong(vehRnp2).array());
-                position.set("vehicleRnp", vehicleRnp);
-                position.getAttributes().remove("io231");
-                position.getAttributes().remove("io232");
-            }
-            Long vin1 = (Long) position.getAttributes().get("io233"); //vin код
-            Long vin2 = (Long) position.getAttributes().get("io234");
-            if (vin2 != null && vin1 != null) {
-                String vehicleIN = new String(ByteBuffer.allocate(16).putLong(vin1).putLong(vin2).array());
-                position.set(Position.KEY_VIN, vehicleIN);
-                position.getAttributes().remove("io233");
-                position.getAttributes().remove("io234");
-            }
         }
     }
 
