@@ -245,7 +245,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(61, fmb6XX, (p, b) -> p.set("d2SAD", b.readUnsignedShort()));
         register(66, any, (p, b) -> p.set(Position.KEY_POWER, b.readUnsignedShort() * 0.001));
         register(67, any, (p, b) -> p.set(Position.KEY_BATTERY, b.readUnsignedShort() * 0.001));
-        register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort())); //delete?
+        register(68, fmbXXX, (p, b) -> p.set("batteryCurrent", b.readUnsignedShort()));
         register(69, fmb6XX, (p, b) -> p.set("d1CmDT", b.readUnsignedShort()));
         register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
