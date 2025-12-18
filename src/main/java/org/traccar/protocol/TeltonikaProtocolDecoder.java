@@ -223,6 +223,14 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         PARAMETERS.computeIfAbsent(id, key -> new HashMap<>()).put(predicate, handler);
     }
 
+    private static Long getLongAttr(Position p, String key) {
+        Object v = p.getAttributes().get(key);
+        if (v instanceof Number) {
+            return ((Number) v).longValue();
+        }
+        return null;
+    }
+
     static {
         Predicate<String> any = (m) -> true;
         Predicate<String> fmbXXX = (m) -> m != null && (m.startsWith("FM") || m.equals("MTB100") || m.equals("MSP500"));
@@ -646,6 +654,42 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         if (position.getAttributes().containsKey("llc1FuelLevel")
             && position.getAttributes().containsKey("llc2FuelLevel")) {
         position.set("llcFuelTotal", 0);
+        }
+
+        if (model != null && model.matches("FM.6..")) {
+
+            Long msb = getLongAttr(position, "io195");
+            Long lsb = getLongAttr(position, "io196");
+
+            if (msb != null && lsb != null && (msb != 0 || lsb != 0)) {
+                String driverId = String.format("%016X%016X", msb, lsb);
+                position.set(Position.KEY_DRIVER_UNIQUE_ID, driverId);
+            }
+
+            position.getAttributes().remove("io195");
+            position.getAttributes().remove("io196");
+
+            Long rnp1 = getLongAttr(position, "io231");
+            Long rnp2 = getLongAttr(position, "io232");
+
+            if (rnp1 != null && rnp2 != null && (rnp1 != 0 || rnp2 != 0)) {
+                position.set("vehicleRnp",
+                    String.format("%016X%016X", rnp1, rnp2));
+            }
+
+            position.getAttributes().remove("io231");
+            position.getAttributes().remove("io232");
+
+            Long vin1 = getLongAttr(position, "io233");
+            Long vin2 = getLongAttr(position, "io234");
+
+            if (vin1 != null && vin2 != null && (vin1 != 0 || vin2 != 0)) {
+                position.set(Position.KEY_VIN,
+                    String.format("%016X%016X", vin1, vin2));
+            }
+
+            position.getAttributes().remove("io233");
+            position.getAttributes().remove("io234");
         }
     }
 
