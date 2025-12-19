@@ -668,11 +668,11 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             position.getAttributes().remove("io195");
             position.getAttributes().remove("io196");
 			
-            Long msb = getLongAttr(position, "io197");
-            Long lsb = getLongAttr(position, "io198");
+            Long msb2 = getLongAttr(position, "io197");
+            Long lsb2 = getLongAttr(position, "io198");
 
-            if (msb != null && lsb != null && (msb != 0 || lsb != 0)) {
-                String driverId = String.format("%016X%016X", msb, lsb);
+            if (msb2 != null && lsb2 != null && (msb2 != 0 || lsb2 != 0)) {
+                String driverId = String.format("%016X%016X", msb2, lsb2);
                 position.set(Position.KEY_DRIVER_UNIQUE_ID2, driverId);
             }
 
