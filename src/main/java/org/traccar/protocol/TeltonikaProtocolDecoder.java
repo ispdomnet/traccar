@@ -667,7 +667,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
 
             position.getAttributes().remove("io195");
             position.getAttributes().remove("io196");
-			
+
             Long msb2 = getLongAttr(position, "io197");
             Long lsb2 = getLongAttr(position, "io198");
 
