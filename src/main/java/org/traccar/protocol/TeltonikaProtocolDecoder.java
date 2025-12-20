@@ -627,7 +627,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                             }
                         }
                     }
-                } else if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я+прізвище водія 1, 2
+                } else if (id == 10518 && id == 10519 && id == 10520 && id == 10521) { //ім'я+прізвище водія 1, 2 test
                     int expected = 36;
                     if (length > buf.readableBytes()) {
                         buf.skipBytes(buf.readableBytes());
@@ -657,7 +657,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         position.set("llcFuelTotal", 0);
         }
 
-        if (model != null && model.matches("FM.6..")) {
+        if (model != null && model.matches("FM66..")) { //test
 
             Long msb = getLongAttr(position, "io195");
             Long lsb = getLongAttr(position, "io196");
