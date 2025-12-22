@@ -273,6 +273,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         //register(192, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
         //register(193, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
         register(194, fmb6XX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
+        register(200, fmb6XX, (p, b) -> p.set("sleepMode", b.readUnsignedByte()));
         register(201, fmb6XX, (p, b) -> p.set("llc1FuelLevel", b.readShort()));
         register(202, fmb6XX, (p, b) -> p.set("lls1Temp", (int) b.readByte()));
         register(203, fmb6XX, (p, b) -> p.set("llc2FuelLevel", b.readShort()));
