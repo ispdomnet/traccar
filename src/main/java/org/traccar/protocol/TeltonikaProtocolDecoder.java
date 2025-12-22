@@ -623,24 +623,18 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                             }
                         }
                     }
-                } else if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я+прізвище водія 1, 2
-                    int expected = 36;
-                    if (length > buf.readableBytes()) {
-                        buf.skipBytes(buf.readableBytes());
-                        return;
-                    }
+                } else if (id == 10518 || id == 10519 || id == 10520 || id == 10521) {
+                        ByteBuf slice = buf.readSlice(length);
+                        slice.readByte();
+                        byte[] data = new byte[slice.readableBytes()];
+                        slice.readBytes(data);
 
-                    int readLen = Math.min(length, expected);
-                    byte[] bytes = new byte[readLen];
-                    buf.readBytes(bytes);
+                        String decoded = new String(data, StandardCharsets.US_ASCII)
+                            .replace("\u0000", "")
+                            .trim();
 
-                    String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
-                    position.set(Position.PREFIX_IO + id, decoded);
-
-                    if (length > readLen) {
-                        buf.skipBytes(length - readLen);
-                    }
-                } else {
+                        position.set(Position.PREFIX_IO + id, decoded);
+                    } else {
                         position.set(Position.PREFIX_IO + id, ByteBufUtil.hexDump(buf.readSlice(length)));
                 }
             }
