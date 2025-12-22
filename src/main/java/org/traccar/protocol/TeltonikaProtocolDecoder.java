@@ -554,11 +554,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                 int id = buf.readUnsignedShort();
                 int length = buf.readUnsignedShort();
 
-                //if (id == 256 || id == 325) { //це не VIN код
-                if (false) {
-                    position.set(Position.KEY_VIN,
-                            buf.readSlice(length).toString(StandardCharsets.US_ASCII));
-                } else if (id == 281) {
+                if (id == 281) {
                     position.set(Position.KEY_DTCS,
                             buf.readSlice(length).toString(StandardCharsets.US_ASCII).replace(',', ' '));
                 } else if (id == 385) {
@@ -627,19 +623,24 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                             }
                         }
                     }
-                } else if (id == 10518 || id == 10519 || id == 10520 || id == 10521) {
+                } else if (id == 10518 || id == 10519 || id == 10520 || id == 10521) { //ім'я+прізвище водія 1, 2
+                    int expected = 36;
+                    if (length > buf.readableBytes()) {
+                        buf.skipBytes(buf.readableBytes());
+                        return;
+                    }
 
-                        ByteBuf slice = buf.readSlice(length);
-                        slice.readByte();
-                        byte[] data = new byte[slice.readableBytes()];
-                        slice.readBytes(data);
+                    int readLen = Math.min(length, expected);
+                    byte[] bytes = new byte[readLen];
+                    buf.readBytes(bytes);
 
-                        String decoded = new String(data, StandardCharsets.US_ASCII)
-                            .replace("\u0000", "")
-                            .trim();
+                    String decoded = new String(bytes, StandardCharsets.US_ASCII).trim();
+                    position.set(Position.PREFIX_IO + id, decoded);
 
-                        position.set(Position.PREFIX_IO + id, decoded);
-                    } else {
+                    if (length > readLen) {
+                        buf.skipBytes(length - readLen);
+                    }
+                } else {
                         position.set(Position.PREFIX_IO + id, ByteBufUtil.hexDump(buf.readSlice(length)));
                 }
             }
