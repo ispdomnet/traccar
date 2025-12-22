@@ -253,7 +253,9 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             }
         });
         register(80, fmb6XX, (p, b) -> p.set("wheelBasedSpeed", b.readUnsignedInt()));
+        register(81, fmb6XX, (p, b) -> p.set("cruiseControl", b.readUnsignedByte()));
         register(84, fmb6XX, (p, b) -> p.set("accelerationPedalPosition", b.readUnsignedInt()));
+        register(85, fmb6XX, (p, b) -> p.set("engineLoad", b.readUnsignedByte()));
         register(86, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_USED, b.readUnsignedInt()));
         register(87, fmbXXX, (p, b) -> p.set(Position.KEY_FUEL_LEVEL, b.readUnsignedInt()));
         register(88, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
@@ -272,7 +274,9 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         //register(193, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
         register(194, fmb6XX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
         register(201, fmb6XX, (p, b) -> p.set("llc1FuelLevel", b.readShort()));
+        register(202, fmb6XX, (p, b) -> p.set("lls1Temp", (int) b.readByte()));
         register(203, fmb6XX, (p, b) -> p.set("llc2FuelLevel", b.readShort()));
+        register(204, fmb6XX, (p, b) -> p.set("lls2Temp", (int) b.readByte()));
         register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort()));
         register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
         //register(216, fmb6XX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
