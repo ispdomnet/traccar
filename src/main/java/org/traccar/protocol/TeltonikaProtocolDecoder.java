@@ -239,6 +239,7 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(21, fmb6XX, (p, b) -> p.set("gsmSignal", b.readUnsignedByte()));
         register(22, fmb6XX, (p, b) -> p.set("dataMode", b.readUnsignedByte()));
         register(24, fmbXXX, (p, b) -> p.setSpeed(UnitsConverter.knotsFromKph(b.readUnsignedShort())));
+        register(48, fmb6XX, (p, b) -> p.set("tachoDataSource", b.readUnsignedByte()));
         register(56, fmb6XX, (p, b) -> p.set("d1CDT", b.readUnsignedShort()));
         register(57, fmb6XX, (p, b) -> p.set("d2CDT", b.readUnsignedShort()));
         register(58, fmb6XX, (p, b) -> p.set("d1CBT", b.readUnsignedShort()));
@@ -248,7 +249,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(66, any, (p, b) -> p.set(Position.KEY_POWER, b.readUnsignedShort() * 0.001));
         register(67, any, (p, b) -> p.set(Position.KEY_BATTERY, b.readUnsignedShort() * 0.001));
         register(69, fmb6XX, (p, b) -> p.set("d1CmDT", b.readUnsignedShort()));
-        register(71, fmb6XX, (p, b) -> p.set("gnssStatus", b.readUnsignedByte()));
         register(78, fmb6XX, (p, b) -> {
             long driverUniqueId = b.readLongLE();
             if (driverUniqueId != 0) {
