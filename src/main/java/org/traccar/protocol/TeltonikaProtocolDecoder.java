@@ -281,8 +281,8 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(189, fmb6XX, (p, b) -> p.set("driver1TimeState", b.readUnsignedByte()));
         register(190, fmb6XX, (p, b) -> p.set("driver2TimeState", b.readUnsignedByte()));
         register(191, fmb6XX, (p, b) -> p.set("tahoSpeed", UnitsConverter.knotsFromKph(b.readUnsignedShort())));
-        //register(192, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER, b.readUnsignedInt()));
-        //register(193, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_TRIP, b.readUnsignedInt()));
+        register(192, fmb6XX, (p, b) -> p.set("odometer", b.readUnsignedInt()));
+        register(193, fmbXXX, (p, b) -> p.set("tripDistance", b.readUnsignedInt()));
         register(194, fmb6XX, (p, b) -> p.set("timestamp", b.readUnsignedInt()));
         register(200, fmb6XX, (p, b) -> p.set("sleepMode", b.readUnsignedByte()));
         register(201, fmb6XX, (p, b) -> p.set("llc1FuelLevel", b.readShort()));
