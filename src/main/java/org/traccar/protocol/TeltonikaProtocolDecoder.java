@@ -42,32 +42,8 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 
 public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
-
-
-    private static final Map<Long, String> OPERATORS = new HashMap<>();
-
-    static {
-        try (BufferedReader reader = new BufferedReader(new FileReader("/opt/traccar/data/operators.csv"))) {
-            String line;
-            reader.readLine(); // skip header
-
-            while ((line = reader.readLine()) != null) {
-                String[] p = line.split(",");
-                int mcc = Integer.parseInt(p[0].trim());
-                int mnc = Integer.parseInt(p[1].trim());
-
-                long key = mcc * 100 + mnc;
-                OPERATORS.put(key, p[2].trim());
-            }
-        } catch (Exception e) {
-            System.err.println("Failed to load operators: " + e.getMessage());
-        }
-    }
-
 
     private static final int IMAGE_PACKET_MAX = 2048;
 
@@ -264,7 +240,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(88, fmbXXX, (p, b) -> p.set(Position.KEY_RPM, b.readUnsignedShort()));
         register(104, fmbXXX, (p, b) -> p.set(Position.KEY_HOURS, b.readUnsignedInt() * 3600000));
         register(110, fmb6XX, (p, b) -> p.set("diagnosticsSupported", b.readUnsignedByte()));
-        //register(113, fmbXXX, (p, b) -> p.set(Position.KEY_ODOMETER_SERVICE, b.readInt() * 1000)); //переробити
         register(123, fmb6XX, (p, b) -> p.set("tachoPerformance", b.readUnsignedByte()));
         register(127, fmb6XX, (p, b) -> p.set("engineCT", b.readByte() - 40));
         register(128, fmb6XX, (p, b) -> p.set("ambientTemp", b.readShort()));
@@ -291,7 +266,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(204, fmb6XX, (p, b) -> p.set("lls2Temp", (int) b.readByte()));
         register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort()));
         register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
-        //register(216, fmb6XX, (p, b) -> p.set("totalOdometer_io", b.readUnsignedInt()));
         register(222, fmb6XX, (p, b) -> p.set("card1Issuer", b.readUnsignedByte()));
         register(239, any, (p, b) -> p.set(Position.KEY_IGNITION, b.readUnsignedByte() > 0));
         register(240, any, (p, b) -> p.set(Position.KEY_MOTION, b.readUnsignedByte() > 0));
@@ -392,30 +366,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
             decodeCell(position, network, "io1203", "io296", "io297", "io298");
             if (network.getCellTowers() != null) {
                 position.setNetwork(network);
-            }
-        } else {
-            Integer cid2g = position.removeInteger("cid2g");
-            Long cid4g = position.removeLong("cid4g");
-            Integer lac = position.removeInteger("lac");
-            if (lac != null && (cid2g != null || cid4g != null)) {
-                Network network = new Network();
-                CellTower cellTower;
-                if (cid2g != null) {
-                    cellTower = CellTower.fromLacCid(getConfig(), lac, cid2g);
-                } else {
-                    cellTower = CellTower.fromLacCid(getConfig(), lac, cid4g);
-                    network.setRadioType("lte");
-                }
-                long operator = position.getInteger(Position.KEY_OPERATOR);
-
-                String operatorName = OPERATORS.getOrDefault(operator, String.valueOf(operator));
-
-                cellTower.setOperator(operator);
-                position.set("operatorName", operatorName);
-
-                network.addCellTower(cellTower);
-                position.setNetwork(new Network(cellTower));
-
             }
         }
     }
@@ -661,8 +611,6 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
                 }
             }
         }
-
-        decodeNetwork(position, model); //декодування сім оператора
 
         if (position.getAttributes().containsKey("llc1FuelLevel")
             && position.getAttributes().containsKey("llc2FuelLevel")) {
