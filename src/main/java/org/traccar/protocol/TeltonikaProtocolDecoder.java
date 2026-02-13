@@ -267,6 +267,9 @@ public class TeltonikaProtocolDecoder extends BaseProtocolDecoder {
         register(205, fmbXXX, (p, b) -> p.set("cid2g", b.readUnsignedShort()));
         register(206, fmbXXX, (p, b) -> p.set("lac", b.readUnsignedShort()));
         register(222, fmb6XX, (p, b) -> p.set("card1Issuer", b.readUnsignedByte()));
+        register(224, fmb6XX, (p, b) -> p.set("ultrasonicFuelLevel1", b.readShort() * 0.1));
+        register(225, fmb6XX, (p, b) -> p.set("ultrasonicFuelLevel2", b.readShort() * 0.1));
+
         register(239, any, (p, b) -> p.set(Position.KEY_IGNITION, b.readUnsignedByte() > 0));
         register(240, any, (p, b) -> p.set(Position.KEY_MOTION, b.readUnsignedByte() > 0));
         register(241, any, (p, b) -> p.set(Position.KEY_OPERATOR, b.readUnsignedInt()));
